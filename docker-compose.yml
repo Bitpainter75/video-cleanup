@@ -1,0 +1,39 @@
+services:
+  video-cleanup:
+    build: .
+    container_name: video-cleanup
+    restart: unless-stopped
+
+    volumes:
+      - ./input:/input          # Eingangsordner: Videos hier ablegen
+      - ./output:/output        # Ausgangsordner: verarbeitete Dateien
+      - ./logs:/logs            # Log-Dateien mit Zeitstempel
+
+    environment:
+      # ── Sprache ─────────────────────────────────────────────────────────────
+      # Spuren dieser Sprachen werden behalten (leerzeichen-getrennt).
+      # Deutsch:  "deu ger de"
+      # Englisch: "eng en"
+      # Beides:   "deu ger de eng en"
+      KEEP_LANGS: "deu ger de"
+
+      # ── Verarbeitungs-Optionen ───────────────────────────────────────────────
+      # Nicht gewünschte Audio/Untertitel-Spuren entfernen
+      CLEANUP: "true"
+
+      # Alle Untertitel entfernen (auch die in KEEP_LANGS)
+      REMOVE_ALL_SUBS: "false"
+
+      # Alle Metadaten/Tags aus dem Container entfernen
+      REMOVE_METADATA: "false"
+
+      # Audio-Normalisierung (loudnorm 2-Pass, AAC 192k Stereo)
+      NORMALIZE: "false"
+
+      # Originaldatei im Input-Ordner als .bak behalten
+      KEEP_BACKUP: "false"
+
+      # ── Dateiformate ────────────────────────────────────────────────────────
+      # Leerzeichen-getrennte Liste der zu überwachenden Erweiterungen
+      EXTENSIONS: "mkv mp4 avi ts m2ts mov"
+
